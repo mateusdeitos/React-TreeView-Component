@@ -3,21 +3,14 @@ import './App.css';
 import { ITreeNode, TreeView } from './TreeView';
 import { ITreeNodeProps, TreeNode } from './TreeView/TreeNode';
 import { useState } from 'react';
+import { TreeSemFetch } from './TreeSemFetch';
 
 function App() {
-  const [selected, setSelected] = useState<ITreeNode[]>([]);
   return (
     <div className="App">
-      <TreeView
-        nodes={categorias}
-        onSelect={(nodes) => setSelected(nodes)}
-        allowMultiSelect
-        isSelectable={(categoria, level) =>
-          level === 0 || categoria.childrenNodes.length === 0
-        }
-        fetchChildrenNodes={fetchChildrenNodes}
-        // CustomTreeNodeComponent={CustomTreeNodeComponent}
-      />
+      <div className="spacer"></div>
+      <TreeSemFetch />
+      <hr />
     </div>
   );
 }

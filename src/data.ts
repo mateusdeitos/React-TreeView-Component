@@ -1,4 +1,4 @@
-import { ITreeNode } from './TreeView/Context';
+import { ITreeNode } from './TreeView';
 
 const getId = () => Date.now() + Math.ceil(Math.random() * 10000);
 const getRandomName = () => {
@@ -78,7 +78,7 @@ const getRandomName = () => {
 
 export const getCategories = (
   parentNode: ITreeNode | null = null,
-  level = 0
+  fetchChildren = true
 ): ITreeNode[] => {
   const length = Math.ceil(Math.random() * 5);
   return Array.from({ length }, () => {
@@ -91,7 +91,7 @@ export const getCategories = (
 
     return {
       ...node,
-      childrenNodes: level === 3 ? [] : getCategories(node, level + 1),
+      childrenNodes: fetchChildren ? [] : getCategories(node, fetchChildren),
     };
   });
 };
