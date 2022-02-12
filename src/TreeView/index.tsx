@@ -1,4 +1,4 @@
-import { createContext, ReactElement, useContext, useState } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import { QueryClientProvider, QueryClient } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { TreeNode } from '../TreeView/TreeNode';
@@ -35,7 +35,7 @@ interface IContext {
   /**
    * callback para decidir se um nó pode ou não ser selecionado na árvore
    */
-  isSelectable?: (node: ITreeNode, level: number) => boolean;
+  isSelectable: (node: ITreeNode, level: number) => boolean;
   /**
    * callback para verificar se um nó está selecionado
    */
@@ -137,39 +137,26 @@ interface ITreeViewProps extends ITreeViewProviderProps {
    * Componente customizado de loading quando existir 'fetchChildrenNodes'
    */
   CustomLoaderComponent?: React.FC<ITreeLoaderProps>;
-  /**
-   * Renderizar automaticamente os nós dentro do ContextProvider utilizando o componente padrão 'TreeNode'
-   * default = false
-   */
-  renderNodesAutomatically?: boolean;
 }
 
 export const TreeView: React.FC<ITreeViewProps> = ({
   CustomLoaderComponent = TreeNode.Loader,
-  renderNodesAutomatically = false,
+  nodes,
   children,
   ...props
 }) => {
   return (
-    <TreeViewProvider {...props}>
+    <TreeViewProvider nodes={nodes} {...props}>
+      {nodes.map((node) => {
+        return (
+          <TreeNode
+            key={node.nodeId}
+            node={node}
+            Loader={CustomLoaderComponent}
+          />
+        );
+      })}
       {children}
-      <TreeViewConsumer>
-        {({ nodes }) => {
-          return (
-            renderNodesAutomatically &&
-            nodes.map((node) => {
-              return (
-                <TreeNode
-                  key={node.nodeId}
-                  node={node}
-                  level={0}
-                  Loader={CustomLoaderComponent}
-                />
-              );
-            })
-          );
-        }}
-      </TreeViewConsumer>
     </TreeViewProvider>
   );
 };

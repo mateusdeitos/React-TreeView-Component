@@ -1,5 +1,4 @@
 import './App.css';
-import { ITreeNodeProps, TreeNode } from './TreeView/TreeNode';
 import { TreeSemFetch } from './TreeSemFetch';
 import { TreeComFetch } from './TreeComFetch';
 import { TreeCustomComponent } from './TreeCustomComponent';

@@ -14,7 +14,9 @@ export const TreeCustomComponent = () => {
     >
       <TreeViewConsumer>
         {({ nodes }) =>
-          nodes.map((node) => <CustomTreeNodeComponent node={node} level={0} />)
+          nodes.map((node) => (
+            <CustomTreeNodeComponent key={node.nodeId} node={node} />
+          ))
         }
       </TreeViewConsumer>
     </TreeViewProvider>

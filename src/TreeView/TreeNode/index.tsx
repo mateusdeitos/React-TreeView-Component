@@ -10,13 +10,13 @@ import {
 } from '../../TreeView/TreeNode/Loader';
 
 export interface ITreeNodeProps {
-  level: number;
+  level?: number;
   node: ITreeNode;
   Loader?: React.FC<ITreeLoaderProps>;
 }
 
 export const TreeNode = ({ ...props }: ITreeNodeProps) => {
-  const { node, level, Loader = TreeNode.Loader } = props;
+  const { node, level = 0, Loader = TreeNode.Loader } = props;
   const { nodeId, description } = node;
   const { fetchChildrenNodes } = useTreeView();
   const [buttonState, setButtonState] = useState({

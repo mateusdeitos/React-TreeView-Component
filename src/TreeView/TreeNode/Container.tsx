@@ -10,7 +10,7 @@ export const TreeNodeContainer = ({
 }: PropsWithChildren<
   ITreeNodeProps & { htmlProps?: HTMLProps<HTMLDivElement> }
 >) => {
-  const { level } = props;
+  const { level = 0 } = props;
   const { toggle, isSelectable, isNodeSelected } = useTreeView();
   const isSelected = isNodeSelected(node);
   const { className = '', style = {}, ...rest } = htmlProps;

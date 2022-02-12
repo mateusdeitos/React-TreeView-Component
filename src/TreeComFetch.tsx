@@ -11,7 +11,6 @@ export const TreeComFetch = () => {
       nodes={categorias}
       onSelect={(nodes) => setSelected(nodes)}
       allowMultiSelect
-      renderNodesAutomatically
       isSelectable={(categoria, level) => level <= 1}
       fetchChildrenNodes={fetchChildrenNodes}
       CustomLoaderComponent={({ ...props }) => {
