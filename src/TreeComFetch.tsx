@@ -14,11 +14,7 @@ export const TreeComFetch = () => {
       renderNodesAutomatically
       isSelectable={(categoria, level) => level <= 1}
       fetchChildrenNodes={fetchChildrenNodes}
-      CustomLoaderComponent={({ show, ...props }) => {
-        if (!show) {
-          return null;
-        }
-
+      CustomLoaderComponent={({ ...props }) => {
         return (
           <TreeNode.Container {...props}>
             <strong>Aguarde, carregando...</strong>

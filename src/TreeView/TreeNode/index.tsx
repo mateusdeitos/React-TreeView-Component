@@ -64,12 +64,9 @@ export const TreeNode = ({ ...props }: ITreeNodeProps) => {
       </TreeNode.Container>
 
       <div>
-        <Loader
-          {...props}
-          show={buttonState.isOpen && isLoading && !!fetchChildrenNodes}
-        >
-          Carregando...
-        </Loader>
+        {buttonState.isOpen && isLoading && !!fetchChildrenNodes && (
+          <Loader {...props}>Carregando...</Loader>
+        )}
 
         {renderChildren &&
           childrenNodes?.map((node) => (
