@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import './styles.css';
-import { ITreeNode, TreeView, useTreeView } from '../../TreeView';
+import { ITreeNode, useTreeView } from '../../TreeView';
 import { TreeNodeContainer } from '../../TreeView/TreeNode/Container';
 import { TreeNodeToggleButton } from '../../TreeView/TreeNode/ToggleButton';
 import { useQuery } from 'react-query';
@@ -14,52 +14,61 @@ export interface ITreeNodeProps {
 export const TreeNode = ({ ...props }: ITreeNodeProps) => {
   const { node, level } = props;
   const { nodeId, description } = node;
-  const [isOpen, setIsOpen] = useState(false);
-  const [state, setState] = useState({
-    childrenNodes: [] as ITreeNode[],
-    isLoading: false,
-  });
   const { fetchChildrenNodes } = useTreeView();
+  const [buttonState, setButtonState] = useState({
+    isOpen: false,
+    isVisible: !!fetchChildrenNodes || !!node.childrenNodes.length,
+  });
 
-  useEffect(() => {
-    if (isOpen) {
-      setState((state) => ({ ...state, isLoading: true }));
-      fetchChildrenNodes(node, level)
-        .then((childrenNodes) => {
-          console.log(childrenNodes);
-          setState((state) => ({
+  const { data: childrenNodes, isLoading } = useQuery<ITreeNode[]>(
+    ['nodes', node.nodeId],
+    () =>
+      !!fetchChildrenNodes
+        ? fetchChildrenNodes(node, level)
+        : Promise.resolve(node.childrenNodes),
+    {
+      enabled: buttonState.isOpen,
+      onSettled: (data) => {
+        if (!data || !data?.length) {
+          setButtonState((state) => ({
             ...state,
-            childrenNodes,
+            isOpen: false,
+            isVisible: false,
           }));
-
-          if (!childrenNodes.length) {
-            setIsOpen(false);
-          }
-        })
-        .finally(() => setState((state) => ({ ...state, isLoading: false })));
+        }
+      },
     }
-  }, [isOpen]);
+  );
+
+  const renderChildren = buttonState.isOpen && !isLoading && !!childrenNodes;
 
   return (
     <>
       <TreeNode.Container {...props}>
         <span>
-          <TreeNode.ToggleButton {...props} toggle={() => setIsOpen(!isOpen)}>
-            {isOpen ? '-' : '+'}
+          <TreeNode.ToggleButton
+            {...props}
+            isVisible={buttonState.isVisible}
+            toggle={() =>
+              setButtonState((state) => ({ ...state, isOpen: !state.isOpen }))
+            }
+          >
+            {buttonState.isOpen ? '-' : '+'}
           </TreeNode.ToggleButton>
           {nodeId} - {description}
         </span>
       </TreeNode.Container>
 
       <div>
-        <TreeNode.Loader {...props} show={isOpen && state.isLoading}>
+        <TreeNode.Loader
+          {...props}
+          show={buttonState.isOpen && isLoading && !!fetchChildrenNodes}
+        >
           Carregando...
         </TreeNode.Loader>
 
-        {isOpen &&
-          !state.isLoading &&
-          !!state.childrenNodes.length &&
-          state.childrenNodes.map((node) => (
+        {renderChildren &&
+          childrenNodes?.map((node) => (
             <TreeNode key={node.nodeId} level={level + 1} node={node} />
           ))}
       </div>

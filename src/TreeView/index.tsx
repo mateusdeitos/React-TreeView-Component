@@ -1,4 +1,5 @@
 import { createContext, ReactElement, useContext, useState } from 'react';
+import { QueryClientProvider, QueryClient } from 'react-query';
 import { ITreeNodeProps, TreeNode } from '../TreeView/TreeNode';
 
 export interface ITreeNode {
@@ -16,7 +17,7 @@ interface IContext {
   toggle: (node: ITreeNode) => void;
   isSelectable: (node: ITreeNode, level: number) => boolean;
   isNodeSelected: (node: ITreeNode) => boolean;
-  fetchChildrenNodes: (node: ITreeNode, level: number) => Promise<ITreeNode[]>;
+  fetchChildrenNodes?: (node: ITreeNode, level: number) => Promise<ITreeNode[]>;
 }
 
 const Context = createContext<IContext>({} as IContext);
@@ -32,6 +33,8 @@ interface ITreeViewProviderProps {
   fetchChildrenNodes?: (node: ITreeNode, level: number) => Promise<ITreeNode[]>;
 }
 
+const client = new QueryClient();
+
 export const TreeView: React.FC<ITreeViewProviderProps> = ({
   children,
   nodes,
@@ -39,7 +42,7 @@ export const TreeView: React.FC<ITreeViewProviderProps> = ({
   onSelect,
   allowMultiSelect = false,
   CustomTreeNodeComponent = TreeNode,
-  fetchChildrenNodes = (node: ITreeNode) => Promise.resolve(node.childrenNodes),
+  fetchChildrenNodes,
 }) => {
   const [selected, setSelected] = useState<IContext['nodes']>([]);
 
@@ -47,9 +50,9 @@ export const TreeView: React.FC<ITreeViewProviderProps> = ({
     selected.some((n) => n.nodeId === node.nodeId);
 
   const unselect = (node: ITreeNode) => {
-    setSelected((nodesSelected) =>
-      nodesSelected.filter((n) => n.nodeId !== node.nodeId)
-    );
+    const selectedNodes = selected.filter((n) => n.nodeId !== node.nodeId);
+    setSelected(selectedNodes);
+    onSelect(selectedNodes);
   };
 
   const select = (node: ITreeNode) => {
@@ -67,24 +70,26 @@ export const TreeView: React.FC<ITreeViewProviderProps> = ({
   };
 
   return (
-    <Context.Provider
-      value={{
-        isSelectable,
-        nodes,
-        selected,
-        select,
-        isNodeSelected,
-        toggle,
-        unselect,
-        fetchChildrenNodes,
-      }}
-    >
-      {children}
-      {nodes.map((node) => {
-        return (
-          <CustomTreeNodeComponent key={node.nodeId} level={0} node={node} />
-        );
-      })}
-    </Context.Provider>
+    <QueryClientProvider client={client}>
+      <Context.Provider
+        value={{
+          isSelectable,
+          nodes,
+          selected,
+          select,
+          isNodeSelected,
+          toggle,
+          unselect,
+          fetchChildrenNodes,
+        }}
+      >
+        {children}
+        {nodes.map((node) => {
+          return (
+            <CustomTreeNodeComponent key={node.nodeId} level={0} node={node} />
+          );
+        })}
+      </Context.Provider>
+    </QueryClientProvider>
   );
 };

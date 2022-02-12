@@ -3,11 +3,12 @@ import { ITreeNodeProps } from '../../TreeView/TreeNode';
 
 interface ITreeNodeToggleButtonProps extends ITreeNodeProps {
   toggle: () => void;
+  isVisible: boolean;
 }
 
 export const TreeNodeToggleButton: React.FC<
   ITreeNodeToggleButtonProps & { htmlProps?: HTMLProps<HTMLButtonElement> }
-> = ({ node: { childrenNodes }, children, toggle, htmlProps = {} }) => {
+> = ({ isVisible, children, toggle, htmlProps = {} }) => {
   const { className = '', style = {}, onClick, ...rest } = htmlProps;
 
   return (
@@ -16,7 +17,7 @@ export const TreeNodeToggleButton: React.FC<
       type="button"
       style={{
         ...style,
-        visibility: childrenNodes.length > 0 ? 'initial' : 'hidden',
+        visibility: isVisible ? 'initial' : 'hidden',
       }}
       className={`toggle ${className}`}
       onClick={(e) => {

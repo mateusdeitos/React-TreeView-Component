@@ -70,15 +70,16 @@ const getRandomName = () => {
     'repudiandae',
   ];
 
-  const word1 = words[Math.floor(Math.random() * words.length - 1)];
-  const word2 = words[Math.floor(Math.random() * words.length - 1)];
+  const word1 = words[Math.floor(Math.random() * (words.length - 1))];
+  const word2 = words[Math.floor(Math.random() * (words.length - 1))];
 
   return `${word1}-${word2}`;
 };
 
 export const getCategories = (
   parentNode: ITreeNode | null = null,
-  fetchChildren = true
+  level = 0,
+  maxLevelToFetchChildren = 3
 ): ITreeNode[] => {
   const length = Math.ceil(Math.random() * 5);
   return Array.from({ length }, () => {
@@ -91,7 +92,10 @@ export const getCategories = (
 
     return {
       ...node,
-      childrenNodes: fetchChildren ? [] : getCategories(node, fetchChildren),
+      childrenNodes:
+        level > maxLevelToFetchChildren
+          ? []
+          : getCategories(node, level + 1, maxLevelToFetchChildren),
     };
   });
 };
