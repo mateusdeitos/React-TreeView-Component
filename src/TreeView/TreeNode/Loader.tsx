@@ -10,7 +10,7 @@ export const TreeNodeLoader: React.FC<ITreeNodeProps & { show: boolean }> = ({
   }
   return (
     <TreeNode.Container {...props}>
-      <p>{children}</p>
+      <span>{children}</span>
     </TreeNode.Container>
   );
 };

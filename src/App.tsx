@@ -1,30 +1,23 @@
-import { categorias, getCategories } from './data';
 import './App.css';
-import { ITreeNode, TreeView } from './TreeView';
 import { ITreeNodeProps, TreeNode } from './TreeView/TreeNode';
 import { useState } from 'react';
 import { TreeSemFetch } from './TreeSemFetch';
+import { TreeComFetch } from './TreeComFetch';
 
 function App() {
   return (
     <div className="App">
       <div className="spacer"></div>
+      <h3>Tree sem fetching de filhos</h3>
       <TreeSemFetch />
+      <hr />
+      <div className="spacer"></div>
+      <h3>Tree com fetching de filhos</h3>
+      <TreeComFetch />
       <hr />
     </div>
   );
 }
-
-const fetchChildrenNodes = (
-  node: ITreeNode,
-  level: number
-): Promise<ITreeNode[]> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(getCategories(node, level));
-    }, 2000);
-  });
-};
 
 const CustomTreeNodeComponent: React.FC<ITreeNodeProps> = ({ ...props }) => {
   const [isOpen, setIsOpen] = useState(false);

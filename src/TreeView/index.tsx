@@ -1,5 +1,6 @@
 import { createContext, ReactElement, useContext, useState } from 'react';
 import { QueryClientProvider, QueryClient } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
 import { ITreeNodeProps, TreeNode } from '../TreeView/TreeNode';
 
 export interface ITreeNode {
@@ -86,10 +87,11 @@ export const TreeView: React.FC<ITreeViewProviderProps> = ({
         {children}
         {nodes.map((node) => {
           return (
-            <CustomTreeNodeComponent key={node.nodeId} level={0} node={node} />
+            <CustomTreeNodeComponent key={node.nodeId} node={node} level={0} />
           );
         })}
       </Context.Provider>
+      <ReactQueryDevtools />
     </QueryClientProvider>
   );
 };

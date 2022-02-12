@@ -27,7 +27,7 @@ export const TreeNode = ({ ...props }: ITreeNodeProps) => {
         ? fetchChildrenNodes(node, level)
         : Promise.resolve(node.childrenNodes),
     {
-      enabled: buttonState.isOpen,
+      enabled: buttonState.isOpen || !node.childrenNodes.length,
       onSettled: (data) => {
         if (!data || !data?.length) {
           setButtonState((state) => ({
