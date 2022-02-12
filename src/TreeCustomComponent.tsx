@@ -25,7 +25,7 @@ export const TreeCustomComponent = () => {
 
 const CustomTreeNodeComponent: React.FC<ITreeNodeProps> = ({ ...props }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { level, node, Loader } = props;
+  const { level = 0, node, Loader } = props;
   const toggle = () => setIsOpen(!isOpen);
   return (
     <>
@@ -51,7 +51,7 @@ const CustomTreeNodeComponent: React.FC<ITreeNodeProps> = ({ ...props }) => {
       {isOpen &&
         node.childrenNodes.map((child) => (
           <CustomTreeNodeComponent
-            key={node.nodeId}
+            key={child.nodeId}
             node={child}
             level={level + 1}
             Loader={Loader}
