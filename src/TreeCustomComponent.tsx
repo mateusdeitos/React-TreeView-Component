@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { getCategories } from './data';
-import { ITreeNode, TreeView, TreeViewConsumer } from './TreeView';
+import { ITreeNode, TreeViewConsumer, TreeViewProvider } from './TreeView';
 import { ITreeNodeProps, TreeNode } from './TreeView/TreeNode';
 
 const categorias = getCategories();
 export const TreeCustomComponent = () => {
   const [selected, setSelected] = useState<ITreeNode[]>([]);
   return (
-    <TreeView
+    <TreeViewProvider
       nodes={categorias}
       onSelect={(nodes) => setSelected(nodes)}
       allowMultiSelect
@@ -17,7 +17,7 @@ export const TreeCustomComponent = () => {
           nodes.map((node) => <CustomTreeNodeComponent node={node} level={0} />)
         }
       </TreeViewConsumer>
-    </TreeView>
+    </TreeViewProvider>
   );
 };
 

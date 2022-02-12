@@ -64,19 +64,10 @@ interface ITreeViewProviderProps {
    */
   onSelect: (nodes: ITreeNode[]) => void;
   /**
-   * Componente customizado de loading quando existir 'fetchChildrenNodes'
-   */
-  CustomLoaderComponent?: React.FC<ITreeLoaderProps>;
-  /**
    * Permite seleção de mais de um nó
    * default = false
    */
   allowMultiSelect?: boolean;
-  /**
-   * Renderizar automaticamente os nós dentro do ContextProvider utilizando o componente padrão 'TreeNode'
-   * default = false
-   */
-  renderNodesAutomatically?: boolean;
   /**
    * Callback utilizada para buscar os nós filhos do nó atual
    */
@@ -87,14 +78,12 @@ const client = new QueryClient();
 
 export const TreeViewConsumer = Context.Consumer;
 
-export const TreeView: React.FC<ITreeViewProviderProps> = ({
+export const TreeViewProvider: React.FC<ITreeViewProviderProps> = ({
   children,
   nodes,
   isSelectable = (node, level) => true,
   onSelect,
-  renderNodesAutomatically = false,
   allowMultiSelect = false,
-  CustomLoaderComponent = TreeNode.Loader,
   fetchChildrenNodes,
 }) => {
   const [selected, setSelected] = useState<IContext['nodes']>([]);
@@ -137,19 +126,50 @@ export const TreeView: React.FC<ITreeViewProviderProps> = ({
         }}
       >
         {children}
-        {renderNodesAutomatically &&
-          nodes.map((node) => {
-            return (
-              <TreeNode
-                key={node.nodeId}
-                node={node}
-                level={0}
-                Loader={CustomLoaderComponent}
-              />
-            );
-          })}
       </Context.Provider>
       <ReactQueryDevtools />
     </QueryClientProvider>
+  );
+};
+
+interface ITreeViewProps extends ITreeViewProviderProps {
+  /**
+   * Componente customizado de loading quando existir 'fetchChildrenNodes'
+   */
+  CustomLoaderComponent?: React.FC<ITreeLoaderProps>;
+  /**
+   * Renderizar automaticamente os nós dentro do ContextProvider utilizando o componente padrão 'TreeNode'
+   * default = false
+   */
+  renderNodesAutomatically?: boolean;
+}
+
+export const TreeView: React.FC<ITreeViewProps> = ({
+  CustomLoaderComponent = TreeNode.Loader,
+  renderNodesAutomatically = false,
+  children,
+  ...props
+}) => {
+  return (
+    <TreeViewProvider {...props}>
+      {children}
+      <TreeViewConsumer>
+        {({ nodes }) => {
+          return (
+            renderNodesAutomatically &&
+            nodes.map((node) => {
+              return (
+                <TreeNode
+                  key={node.nodeId}
+                  node={node}
+                  level={0}
+                  Loader={CustomLoaderComponent}
+                />
+              );
+            })
+          );
+        }}
+      </TreeViewConsumer>
+    </TreeViewProvider>
   );
 };
