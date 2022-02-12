@@ -1,6 +1,5 @@
 import './App.css';
 import { ITreeNodeProps, TreeNode } from './TreeView/TreeNode';
-import { useState } from 'react';
 import { TreeSemFetch } from './TreeSemFetch';
 import { TreeComFetch } from './TreeComFetch';
 import { TreeCustomComponent } from './TreeCustomComponent';

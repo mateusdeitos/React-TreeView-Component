@@ -4,15 +4,19 @@ import { ITreeNode, useTreeView } from '../../TreeView';
 import { TreeNodeContainer } from '../../TreeView/TreeNode/Container';
 import { TreeNodeToggleButton } from '../../TreeView/TreeNode/ToggleButton';
 import { useQuery } from 'react-query';
-import { TreeNodeLoader } from '../../TreeView/TreeNode/Loader';
+import {
+  ITreeLoaderProps,
+  TreeNodeLoader,
+} from '../../TreeView/TreeNode/Loader';
 
 export interface ITreeNodeProps {
   level: number;
   node: ITreeNode;
+  Loader?: React.FC<ITreeLoaderProps>;
 }
 
 export const TreeNode = ({ ...props }: ITreeNodeProps) => {
-  const { node, level } = props;
+  const { node, level, Loader = TreeNode.Loader } = props;
   const { nodeId, description } = node;
   const { fetchChildrenNodes } = useTreeView();
   const [buttonState, setButtonState] = useState({
@@ -60,16 +64,21 @@ export const TreeNode = ({ ...props }: ITreeNodeProps) => {
       </TreeNode.Container>
 
       <div>
-        <TreeNode.Loader
+        <Loader
           {...props}
           show={buttonState.isOpen && isLoading && !!fetchChildrenNodes}
         >
           Carregando...
-        </TreeNode.Loader>
+        </Loader>
 
         {renderChildren &&
           childrenNodes?.map((node) => (
-            <TreeNode key={node.nodeId} level={level + 1} node={node} />
+            <TreeNode
+              key={node.nodeId}
+              level={level + 1}
+              node={node}
+              Loader={Loader}
+            />
           ))}
       </div>
     </>

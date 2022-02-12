@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { getCategories } from './data';
-import { ITreeNode, TreeView } from './TreeView';
+import { ITreeNode, TreeView, TreeViewConsumer } from './TreeView';
 import { ITreeNodeProps, TreeNode } from './TreeView/TreeNode';
 
 const categorias = getCategories();
@@ -11,15 +11,19 @@ export const TreeCustomComponent = () => {
       nodes={categorias}
       onSelect={(nodes) => setSelected(nodes)}
       allowMultiSelect
-      isSelectable={(categoria, level) => true}
-      CustomTreeNodeComponent={CustomTreeNodeComponent}
-    />
+    >
+      <TreeViewConsumer>
+        {({ nodes }) =>
+          nodes.map((node) => <CustomTreeNodeComponent node={node} level={0} />)
+        }
+      </TreeViewConsumer>
+    </TreeView>
   );
 };
 
 const CustomTreeNodeComponent: React.FC<ITreeNodeProps> = ({ ...props }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { level, node } = props;
+  const { level, node, Loader } = props;
   const toggle = () => setIsOpen(!isOpen);
   return (
     <>
@@ -48,6 +52,7 @@ const CustomTreeNodeComponent: React.FC<ITreeNodeProps> = ({ ...props }) => {
             key={node.nodeId}
             node={child}
             level={level + 1}
+            Loader={Loader}
           />
         ))}
     </>

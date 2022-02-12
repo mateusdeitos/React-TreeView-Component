@@ -1,6 +1,10 @@
 import { ITreeNodeProps, TreeNode } from '../../TreeView/TreeNode';
 
-export const TreeNodeLoader: React.FC<ITreeNodeProps & { show: boolean }> = ({
+export interface ITreeLoaderProps extends ITreeNodeProps {
+  show: boolean;
+}
+
+export const TreeNodeLoader: React.FC<ITreeLoaderProps> = ({
   children,
   show,
   ...props

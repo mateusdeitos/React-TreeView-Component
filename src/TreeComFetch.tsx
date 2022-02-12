@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { getCategories } from './data';
 import { ITreeNode, TreeView } from './TreeView';
+import { TreeNode } from './TreeView/TreeNode';
 
 const categorias = getCategories();
 export const TreeComFetch = () => {
@@ -10,8 +11,20 @@ export const TreeComFetch = () => {
       nodes={categorias}
       onSelect={(nodes) => setSelected(nodes)}
       allowMultiSelect
-      isSelectable={(categoria, level) => true}
+      renderNodesAutomatically
+      isSelectable={(categoria, level) => level <= 1}
       fetchChildrenNodes={fetchChildrenNodes}
+      CustomLoaderComponent={({ show, ...props }) => {
+        if (!show) {
+          return null;
+        }
+
+        return (
+          <TreeNode.Container {...props}>
+            <strong>Aguarde, carregando...</strong>
+          </TreeNode.Container>
+        );
+      }}
     />
   );
 };
@@ -20,10 +33,9 @@ const fetchChildrenNodes = (
   node: ITreeNode,
   level: number
 ): Promise<ITreeNode[]> => {
-  console.log({ ...node, level });
   return new Promise((resolve) => {
     setTimeout(() => {
-      resolve(level > 2 ? [] : getCategories(node, level, 2));
+      resolve(level > 2 ? [] : getCategories(node, level));
     }, 300);
   });
 };
