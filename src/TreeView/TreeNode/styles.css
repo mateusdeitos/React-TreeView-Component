@@ -1,0 +1,32 @@
+.tree-node-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  margin-left: 20px;
+  border: 1px solid #ededed;
+  padding: 5px;
+  cursor: pointer;
+}
+.tree-node-container:hover {
+  background-color: rgb(104, 236, 236);
+}
+
+.tree-node-container .toggle {
+  font-size: large;
+  margin-right: 10px;
+  background-color: cornsilk;
+  border: none;
+  cursor: pointer;
+  min-width: 30px;
+}
+.tree-node-container .toggle:hover {
+  filter: brightness(0.9);
+}
+.tree-node-container.active {
+  background-color: blue;
+}
+
+.spacer {
+  height: 20px;
+}
