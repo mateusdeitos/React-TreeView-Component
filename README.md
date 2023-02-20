@@ -1,9 +1,9 @@
-# Componente em React para visualização de dados em árvore para seleção
+# TreeView component built with React
 
 [Edit on StackBlitz ⚡️](https://stackblitz.com/edit/vitejs-vite-8sobqx)
 
 Features:
-- Permite multiseleção
-- Permite renderizar um componente customizado no lugar do Node padrão
-- Permite fazer fetching assíncrono de nodes filhos ao clicar em um node
-- Permite definir se um node pode ser selecionado ou não
+- Allow multiselection
+- Allow rendering custom nodes
+- Allow assynchronously fetching child nodes
+- Allow dynamically defining if a node can be selected or not
